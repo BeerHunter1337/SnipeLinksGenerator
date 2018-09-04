@@ -1,4 +1,6 @@
-﻿namespace SnipeLinksGenerator.Services.PoeNinja
+﻿using System.Collections.Generic;
+
+namespace SnipeLinksGenerator.Services.PoeNinja
 {
     public class NinjaOptions
     {
@@ -6,8 +8,6 @@
 
         public string BaseUrl { get; set; }
 
-        public string CurrencyEndpoint { get; set; }
-
-        public string DivinationCardsEndpoint{ get; set; }
+        public Dictionary<string, string> Endpoints { get; set; }
     }
 }

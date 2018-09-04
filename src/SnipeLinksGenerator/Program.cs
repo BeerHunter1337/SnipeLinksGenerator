@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,8 +24,10 @@ namespace SnipeLinksGenerator
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var client = scope.ServiceProvider.GetService<NinjaApiClient>();
-                client.GetData().Wait();
+                var repo = scope.ServiceProvider.GetService<NinjaRepository>();
+                var exalt = repo.Currencies.Single(c => c.Name == "Exalted Orb");
+
+                var rate = repo.Rates.Single(r => r.Receive.GetCurrencyId == exalt.Id);
             }
         }
 
@@ -34,6 +37,7 @@ namespace SnipeLinksGenerator
             services.AddOptions();
             services.Configure<NinjaOptions>(configuration.GetSection("PoeNinja"));
             services.AddHttpClient<NinjaApiClient>();
+            services.AddSingleton<NinjaRepository>();
         }
     }
 }

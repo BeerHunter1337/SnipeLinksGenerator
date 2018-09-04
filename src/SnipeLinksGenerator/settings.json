@@ -2,7 +2,9 @@
   "PoeNinja": {
     "League": "Delve",
     "BaseUrl": "https://poe.ninja/api/Data/",
-    "CurrencyEndpoint": "GetCurrencyOverview",
-    "DivinationCardsEndpoint": "GetDivinationCardsOverview"
+    "Endpoints": {
+      "currency": "GetCurrencyOverview",
+      "cards": "GetDivinationCardsOverview"
+    }
   }
 }

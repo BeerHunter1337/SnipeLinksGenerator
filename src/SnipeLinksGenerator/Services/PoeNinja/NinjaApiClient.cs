@@ -20,13 +20,15 @@ namespace SnipeLinksGenerator.Services.PoeNinja
 
         public async Task GetData()
         {
-            var response = await _httpClient.GetAsync($"{_options.CurrencyEndpoint}?league={_options.League}");
-
-            response.EnsureSuccessStatusCode();
-
-            using (var stream = File.Open("currency.json", FileMode.Create, FileAccess.ReadWrite))
+            foreach (var endpoint in _options.Endpoints)
             {
-                await stream.WriteAsync(await response.Content.ReadAsByteArrayAsync());
+                var response = await _httpClient.GetAsync($"{endpoint.Value}?league={_options.League}");
+                response.EnsureSuccessStatusCode();
+
+                using (var stream = File.Open($"{endpoint.Key}.json", FileMode.Create, FileAccess.ReadWrite))
+                {
+                    await stream.WriteAsync(await response.Content.ReadAsByteArrayAsync());
+                }
             }
         }
     }
