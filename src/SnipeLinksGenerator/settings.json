@@ -1,6 +1,6 @@
 {
+  "League": "Delve",
   "PoeNinja": {
-    "League": "Delve",
     "BaseUrl": "https://poe.ninja/api/Data/",
     "Endpoints": {
       "currency": "GetCurrencyOverview",
@@ -8,7 +8,7 @@
     }
   },
   "PoeTrade": {
-    "League": "Delve",
     "BaseUrl": "http://poe.trade/",
     "SearchEndpoint": "search"
-  }}
+  }
+}
