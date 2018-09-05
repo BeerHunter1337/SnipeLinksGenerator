@@ -6,5 +6,9 @@
       "currency": "GetCurrencyOverview",
       "cards": "GetDivinationCardsOverview"
     }
-  }
-}
+  },
+  "PoeTrade": {
+    "League": "Delve",
+    "BaseUrl": "http://poe.trade/",
+    "SearchEndpoint": "search"
+  }}
