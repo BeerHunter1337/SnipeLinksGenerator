@@ -52,7 +52,7 @@ namespace SnipeLinksGenerator.Services.PoeTrade
                 switch (rawValue)
                 {
                     case bool b:
-                        value = b ? "X" : string.Empty;
+                        value = b ? "x" : string.Empty;
                         break;
 
                     case Enum e:

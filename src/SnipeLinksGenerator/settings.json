@@ -1,5 +1,6 @@
 {
   "League": "Delve",
+  "OutputPath": "D:\\PoeTools\\poe-sniper\\input",
   "PoeNinja": {
     "BaseUrl": "https://poe.ninja/api/Data/",
     "Endpoints": {

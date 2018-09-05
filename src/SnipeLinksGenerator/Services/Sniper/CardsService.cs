@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SnipeLinksGenerator.Services.PoeNinja;
@@ -19,23 +20,38 @@ namespace SnipeLinksGenerator.Services.Sniper
             _client = client;
         }
 
-        public async Task<(string, string)> GenerateLink(CardEntry entry)
+        public (string, string)[] GenerateLinks(CardEntry entry)
         {
-            Query query = null;
-            string text = null;
+            var queries = new Dictionary<string, Query>();
             switch (entry.ProduceType)
             {
                 case ItemType.Currency:
                     var rate = _repository.Rates.Single(r => r.CurrencyTypeName == entry.ProduceName);
+                    var alchRate = _repository.Rates.Single(r => r.CurrencyTypeName == "Orb of Alchemy");
+
                     var rawCardValue = (1 / rate.Pay.Value * entry.ProduceCount) / entry.StackSize;
-                    query = new Query
+                    var rawCardValueAlch = rawCardValue / (1 / alchRate.Pay.Value);
+
+                    var query = new Query
                     {
                         Name = entry.Name,
                         BuyoutMax = Math.Round(rawCardValue - ((rawCardValue * entry.Profit) / 100), 1),
                         BuyoutCurrency = Currency.Chaos,
-                        Online = true
+                        Online = true,
+                        ExactCurrency = true
                     };
-                    text = $"[DC] {entry.Name}, {rawCardValue:#.#}c";
+                    var queryAlch = new Query
+                    {
+                        Name = entry.Name,
+                        BuyoutMax = Math.Round(rawCardValueAlch - ((rawCardValueAlch * entry.Profit) / 100), 1),
+                        BuyoutCurrency = Currency.Alchemy,
+                        Online = true,
+                        ExactCurrency = true
+                    };
+                    var text = $"[DC] {entry.Name}, {rawCardValue:#.#}c";
+                    var textAlch = $"[DC] {entry.Name}, {rawCardValueAlch:#.#}a";
+                    queries.Add(text, query);
+                    queries.Add(textAlch, queryAlch);
                     break;
                 case ItemType.Unique:
                     break;
@@ -43,7 +59,7 @@ namespace SnipeLinksGenerator.Services.Sniper
                     throw new ArgumentOutOfRangeException();
             }
 
-            return (await _client.GetSearchLink(query), text);
+            return queries.Select(q => (_client.GetSearchLink(q.Value).Result, q.Key)).ToArray();
         }
     }
 }
