@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using SnipeLinksGenerator.Services.Core;
 using SnipeLinksGenerator.Services.PoeNinja;
 using SnipeLinksGenerator.Services.PoeTrade;
+using SnipeLinksGenerator.Services.PoeTrade.Models;
 using SnipeLinksGenerator.Services.Sniper;
 using SnipeLinksGenerator.Services.Sniper.Models;
 
@@ -54,20 +55,19 @@ namespace SnipeLinksGenerator
                     {
                         Name = "The Hoarder",
                         StackSize = 12,
-                        ProduceType = ItemType.Currency,
                         ProduceName = "Exalted Orb",
-                        ProduceCount = 1,
+                        Profit = profit,
+                        Currencies = new []{Currency.Chaos, Currency.Alchemy}
+                    },
+                    new CardEntry
+                    {
+                        Name = "The Sephirot",
+                        StackSize = 11,
+                        ProduceType = ItemType.Currency,
+                        ProduceName = "Divine Orb",
+                        ProduceCount = 10,
                         Profit = profit
                     },
-                    //new CardEntry
-                    //{
-                    //    Name = "The Sephirot",
-                    //    StackSize = 11,
-                    //    ProduceType = ItemType.Currency,
-                    //    ProduceName = "Divine Orb",
-                    //    ProduceCount = 10,
-                    //    Profit = profit
-                    //},
                     //new CardEntry
                     //{
                     //    Name = "The Saint's Treasure",
@@ -77,6 +77,15 @@ namespace SnipeLinksGenerator
                     //    ProduceCount = 2,
                     //    Profit = profit
                     //}
+                    new CardEntry
+                    {
+                        Name = "The Doctor",
+                        StackSize = 8,
+                        ProduceType = ItemType.Unique,
+                        ProduceName = "Headhunter",
+                        Profit = 1,
+                        Currencies = new []{Currency.Exalted}
+                    }
                 };
 
                 foreach (var entry in searchList)
@@ -86,6 +95,11 @@ namespace SnipeLinksGenerator
                     {
                         inputs.Add(item.Item1, item.Item2);
                     }
+                }
+
+                if (!Directory.Exists(settings.OutputPath))
+                {
+                    Directory.CreateDirectory(settings.OutputPath);
                 }
 
                 using (var stream = new StreamWriter($@"{settings.OutputPath}\input.yaml"))

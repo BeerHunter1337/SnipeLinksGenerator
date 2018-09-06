@@ -4,23 +4,23 @@ namespace SnipeLinksGenerator.Services.PoeTrade.Models
 {
     public enum Currency
     {
-        [DisplayName("blessed")] Blessed,
-        [DisplayName("chisel")] Chisel,
-        [DisplayName("chaos")] Chaos,
-        [DisplayName("chromatic")] Chromatic,
-        [DisplayName("divine")] Divine,
+        [DisplayName("chaos")] Chaos = 1,
         [DisplayName("exalted")] Exalted,
-        [DisplayName("gcp")] Gcp,
-        [DisplayName("jewellers")] Jewellers,
+        [DisplayName("divine")] Divine,
         [DisplayName("alchemy")] Alchemy,
-        [DisplayName("alteration")] Alteration,
-        [DisplayName("chance")] Chance,
         [DisplayName("fusing")] Fusing,
-        [DisplayName("regret")] Regret,
-        [DisplayName("scouring")] Scouring,
+        [DisplayName("alteration")] Alteration,
         [DisplayName("regal")] Regal,
         [DisplayName("vaal")] Vaal,
+        [DisplayName("regret")] Regret,
+        [DisplayName("chisel")] Chisel,
+        [DisplayName("jewellers")] Jewellers,
+        [DisplayName("silver")] Silver,
         [DisplayName("coin")] Coin,
-        [DisplayName("silver")] Silver
+        [DisplayName("scouring")] Scouring,
+        [DisplayName("gcp")] Gcp,
+        [DisplayName("chance")] Chance,
+        [DisplayName("chromatic")] Chromatic,
+        [DisplayName("blessed")] Blessed
     }
 }

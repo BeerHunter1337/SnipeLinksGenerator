@@ -12,7 +12,7 @@
 
         public int LevelRequired { get; set; }
 
-        public int BaseType { get; set; }
+        public string BaseType { get; set; }
 
         public int StackSize { get; set; }
 

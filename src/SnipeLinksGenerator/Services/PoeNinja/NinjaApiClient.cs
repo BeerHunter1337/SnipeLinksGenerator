@@ -23,15 +23,32 @@ namespace SnipeLinksGenerator.Services.PoeNinja
 
         public async Task GetData()
         {
+            await SaveToFile(_options.CurrencyEndpoint.Name, _options.CurrencyEndpoint.Value);
             foreach (var endpoint in _options.Endpoints)
             {
-                var response = await _httpClient.GetAsync($"{endpoint.Value}?league={_appSettings.League}");
-                response.EnsureSuccessStatusCode();
+                await SaveToFile(endpoint.Name, endpoint.Value);
+            }
+        }
 
-                using (var stream = File.Open($"{endpoint.Key}.json", FileMode.Create, FileAccess.ReadWrite))
-                {
-                    await stream.WriteAsync(await response.Content.ReadAsByteArrayAsync());
-                }
+        private async Task SaveToFile(string fileName, string endpoint)
+        {
+            if (!Directory.Exists(Constants.DataDir))
+            {
+                Directory.CreateDirectory(Constants.DataDir);
+            }
+
+            var fi = new FileInfo($@"{Constants.DataDir}\{fileName}.json");
+            if (fi.Exists && (fi.CreationTime < DateTime.Now.AddHours(1)))
+            {
+                return;
+            }
+
+            var response = await _httpClient.GetAsync($"{endpoint}?league={_appSettings.League}");
+            response.EnsureSuccessStatusCode();
+
+            using (var stream = File.Open($@"{Constants.DataDir}\{fileName}.json", FileMode.Create, FileAccess.ReadWrite))
+            {
+                await stream.WriteAsync(await response.Content.ReadAsByteArrayAsync());
             }
         }
     }
