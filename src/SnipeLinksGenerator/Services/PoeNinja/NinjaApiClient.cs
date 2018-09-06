@@ -38,7 +38,7 @@ namespace SnipeLinksGenerator.Services.PoeNinja
             }
 
             var fi = new FileInfo($@"{Constants.DataDir}\{fileName}.json");
-            if (fi.Exists && (fi.CreationTime < DateTime.Now.AddHours(1)))
+            if (fi.Exists && (DateTime.Now - fi.LastWriteTime < TimeSpan.FromHours(1)))
             {
                 return;
             }

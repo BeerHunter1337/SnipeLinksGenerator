@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace SnipeLinksGenerator.Services.PoeNinja.Models
+﻿namespace SnipeLinksGenerator.Services.PoeNinja.Models
 {
     public class CurrencyRate
     {

@@ -2,7 +2,7 @@
 
 namespace SnipeLinksGenerator.Services.Sniper.Models
 {
-    public class CardEntry
+    public class CardSearch
     {
         public string Name { get; set; }
 
@@ -11,8 +11,6 @@ namespace SnipeLinksGenerator.Services.Sniper.Models
         public int ProduceCount { get; set; } = 1;
 
         public ItemType ProduceType { get; set; }
-
-        public int StackSize { get; set; }
 
         public decimal Profit { get; set; }
 

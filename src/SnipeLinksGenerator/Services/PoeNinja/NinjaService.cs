@@ -9,7 +9,7 @@ using SnipeLinksGenerator.Services.PoeNinja.Models;
 
 namespace SnipeLinksGenerator.Services.PoeNinja
 {
-    public class NinjaRepository
+    public class NinjaService
     {
         private readonly NinjaApiClient _client;
         private readonly List<Item> _items = new List<Item>();
@@ -17,7 +17,7 @@ namespace SnipeLinksGenerator.Services.PoeNinja
         private List<Currency> _currencies;
         private List<CurrencyRate> _rates;
 
-        public NinjaRepository(NinjaApiClient client, IOptions<NinjaOptions> options)
+        public NinjaService(NinjaApiClient client, IOptions<NinjaOptions> options)
         {
             _client = client;
             _options = options.Value;

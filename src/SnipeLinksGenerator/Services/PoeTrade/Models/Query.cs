@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SnipeLinksGenerator.Services.PoeTrade.Models
 {
@@ -130,13 +131,13 @@ namespace SnipeLinksGenerator.Services.PoeTrade.Models
         [DisplayName("rdex_max")]
         public int? RdexMax { get; set; }
 
-        [DisplayName("rint?_min")]
+        [DisplayName("rint_min")]
         public int? RintMin { get; set; }
 
-        [DisplayName("rint?_max")]
+        [DisplayName("rint_max")]
         public int? RintMax { get; set; }
 
-        public Group[] Groups { get; set; }
+        public IEnumerable<Group> Groups { get; set; }
 
         [DisplayName("q_min")]
         public int? QMin { get; set; }
