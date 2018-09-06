@@ -12,27 +12,20 @@ namespace SnipeLinksGenerator.Services.PoeTrade
     {
         public static string ToQueryString(this Query query)
         {
-            bool IsOfNullableType<T>(T o)
-            {
-                var type = typeof(T);
-                return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
-            }
-
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
             var properties = query.GetType().GetProperties()
-                .Where(x => x.CanRead)
-                .Where(x => x.GetValue(query, null) != null);
+                .Where(x => x.CanRead);
 
             var result = new Dictionary<string, string>();
 
             foreach (var property in properties)
             {
                 string value;
-                if ((property.PropertyType == typeof(IEnumerable)) && (property.PropertyType != typeof(string)))
+                if (property.IsNonStringEnumerable())
                 {
                     continue;
                 }
@@ -42,9 +35,16 @@ namespace SnipeLinksGenerator.Services.PoeTrade
 
                 var rawValue = property.GetValue(query, null);
 
-                if (IsOfNullableType(rawValue) && rawValue is bool b1)
+                if (rawValue == null)
                 {
-                    value = b1 ? "1" : "0";
+                    value = string.Empty;
+                    result.Add(name, value);
+                    continue;
+                }
+
+                if (rawValue.IsOfNullableType() && rawValue is bool bn)
+                {
+                    value = bn ? "1" : "0";
                     result.Add(name, value);
                     continue;
                 }
@@ -52,7 +52,7 @@ namespace SnipeLinksGenerator.Services.PoeTrade
                 switch (rawValue)
                 {
                     case bool b:
-                        value = b ? "X" : string.Empty;
+                        value = b ? "x" : string.Empty;
                         break;
 
                     case Enum e:
@@ -68,10 +68,30 @@ namespace SnipeLinksGenerator.Services.PoeTrade
                 result.Add(name, value);
             }
 
-            return string.Join("&", result
-                .Select(x => string.Concat(
-                    Uri.EscapeDataString(x.Key), "=",
-                    Uri.EscapeDataString(x.Value.ToString()))));
+            return string.Join("&", result.Select(x => $"{x.Key}={x.Value.Replace(" ", "+")}"));
+        }
+
+        public static bool IsNonStringEnumerable(this PropertyInfo pi)
+        {
+            return pi != null && pi.PropertyType.IsNonStringEnumerable();
+        }
+
+        public static bool IsNonStringEnumerable(this object instance)
+        {
+            return instance != null && instance.GetType().IsNonStringEnumerable();
+        }
+
+        public static bool IsNonStringEnumerable(this Type type)
+        {
+            if (type == null || type == typeof(string))
+                return false;
+            return typeof(IEnumerable).IsAssignableFrom(type);
+        }
+
+        public static bool IsOfNullableType<T>(this T o)
+        {
+            var type = typeof(T);
+            return type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
         }
     }
 }

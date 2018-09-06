@@ -1,11 +1,42 @@
 {
   "League": "Delve",
+  "OutputPath": "D:\\PoeTools\\poe-sniper\\input",
   "PoeNinja": {
     "BaseUrl": "https://poe.ninja/api/Data/",
-    "Endpoints": {
-      "currency": "GetCurrencyOverview",
-      "cards": "GetDivinationCardsOverview"
-    }
+    "CurrencyEndpoint": {
+      "Name": "Currency",
+      "Value": "GetCurrencyOverview"
+    },
+    "Endpoints": [
+      {
+        "Name": "Cards",
+        "Value": "GetDivinationCardsOverview"
+      },
+      {
+        "Name": "Fragment",
+        "Value": "GetFragmentOverview"
+      },
+      {
+        "Name": "Armor",
+        "Value": "GetUniqueArmourOverview"
+      },
+      {
+        "Name": "Flask",
+        "Value": "GetUniqueFlaskOverview"
+      },
+      {
+        "Name": "Weapon",
+        "Value": "GetUniqueWeaponOverview"
+      },
+      {
+        "Name": "Accessory",
+        "Value": "GetUniqueAccessoryOverview"
+      },
+      {
+        "Name": "Jewel",
+        "Value": "GetUniqueJewelOverview"
+      }
+    ]
   },
   "PoeTrade": {
     "BaseUrl": "http://poe.trade/",

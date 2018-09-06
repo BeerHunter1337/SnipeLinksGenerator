@@ -5,6 +5,8 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using SnipeLinksGenerator.Services.Core;
 using SnipeLinksGenerator.Services.PoeNinja;
 using SnipeLinksGenerator.Services.PoeTrade;
@@ -32,53 +34,32 @@ namespace SnipeLinksGenerator
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var profit = 20m;
-                var cardsService = scope.ServiceProvider.GetService<CardsService>();
+                var cardsService = scope.ServiceProvider.GetService<LinksService>();
+                var settings = scope.ServiceProvider.GetService<IOptions<Settings>>().Value;
 
                 var inputs = new Dictionary<string, string>();
 
-                var searchList = new List<CardEntry>
-                {
-                    new CardEntry
-                    {
-                        Name = "Abandoned Wealth",
-                        StackSize = 5,
-                        ProduceType = ItemType.Currency,
-                        ProduceName = "Exalted Orb",
-                        ProduceCount = 3,
-                        Profit = profit
-                    },
-                    new CardEntry
-                    {
-                        Name = "The Hoarder",
-                        StackSize = 12,
-                        ProduceType = ItemType.Currency,
-                        ProduceName = "Exalted Orb",
-                        ProduceCount = 1,
-                        Profit = profit
-                    },
-                    new CardEntry
-                    {
-                        Name = "The Saint's Treasure",
-                        StackSize = 10,
-                        ProduceType = ItemType.Currency,
-                        ProduceName = "Exalted Orb",
-                        ProduceCount = 2,
-                        Profit = profit
-                    }
-                };
+                var searchList = JObject.Parse(File.ReadAllText($@"input.json"))["cards"].ToObject<CardSearch[]>();
 
                 foreach (var entry in searchList)
                 {
-                    var result = cardsService.GenerateLink(entry).Result;
-                    inputs.Add(result.Item1, result.Item2);
+                    var result = cardsService.GenerateLinks(entry);
+                    foreach (var item in result)
+                    {
+                        inputs.Add(item.Item1, item.Item2);
+                    }
                 }
 
-                using (var stream = new StreamWriter("output.yaml"))
+                if (!Directory.Exists(settings.OutputPath))
+                {
+                    Directory.CreateDirectory(settings.OutputPath);
+                }
+
+                using (var stream = new StreamWriter($@"{settings.OutputPath}\input.yaml"))
                 {
                     foreach (var input in inputs)
                     {
-                        stream.WriteLine($"{input.Key} : {input.Value}");
+                        stream.WriteLine($"{input.Key} : \"{input.Value}\"");
                     }
                 }
             }
@@ -92,9 +73,9 @@ namespace SnipeLinksGenerator
             services.Configure<NinjaOptions>(configuration.GetSection("PoeNinja"));
             services.Configure<TradeOptions>(configuration.GetSection("PoeTrade"));
             services.AddHttpClient<NinjaApiClient>();
-            services.AddSingleton<NinjaRepository>();
+            services.AddSingleton<NinjaService>();
             services.AddHttpClient<TradeApiClient>();
-            services.AddScoped<CardsService>();
+            services.AddScoped<LinksService>();
         }
     }
 }
